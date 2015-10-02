@@ -41,4 +41,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this,SpinnerActivity.class));
         finish();
     }
+
+    public void dataPicker(View view) {
+        startActivity(new Intent(MainActivity.this,DataPickerActivity.class));
+    }
+
+    public void datePicker2(View view) {
+        startActivity(new Intent(MainActivity.this,DataPickerActivity2.class));
+    }
 }

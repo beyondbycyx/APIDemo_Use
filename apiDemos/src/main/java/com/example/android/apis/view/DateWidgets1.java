@@ -16,18 +16,18 @@
 
 package com.example.android.apis.view;
 
-import com.example.android.apis.R;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
-import android.view.View;
+
+import com.example.android.apis.R;
 
 import java.util.Calendar;
 
@@ -66,6 +66,7 @@ public class DateWidgets1 extends Activity {
         pickDate.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                //调用activity的显示diulog的方法
                 showDialog(DATE_DIALOG_ID);
             }
         });
@@ -74,10 +75,12 @@ public class DateWidgets1 extends Activity {
         pickTime.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                //调用activity的显示diulog的方法
                 showDialog(TIME_DIALOG_ID);
             }
         });
 
+        //创建当前的日历时间
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -85,13 +88,16 @@ public class DateWidgets1 extends Activity {
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
 
+        //在textview 的控件上显示出来
         updateDisplay();
     }
 
+    //创建一个弹出窗口，根据showDialog(id);
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case TIME_DIALOG_ID:
+                //创建一个dialog,根据由activit中获取的当前日历时间，并设置监听器
                 return new TimePickerDialog(this,
                         mTimeSetListener, mHour, mMinute, false);
             case DATE_DIALOG_ID:
@@ -101,7 +107,7 @@ public class DateWidgets1 extends Activity {
         }
         return null;
     }
-
+    //dialog创建完毕，在显示之前执行的操作，设置显示的日期和时间为当前的时间日期
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch (id) {
@@ -113,7 +119,7 @@ public class DateWidgets1 extends Activity {
                 break;
         }
     }    
-
+    //更新activity中显示的日历
     private void updateDisplay() {
         mDateDisplay.setText(
             new StringBuilder()
@@ -130,6 +136,7 @@ public class DateWidgets1 extends Activity {
 
                 public void onDateSet(DatePicker view, int year, int monthOfYear,
                         int dayOfMonth) {
+                    //点击确定后更新数据
                     mYear = year;
                     mMonth = monthOfYear;
                     mDay = dayOfMonth;
@@ -141,12 +148,14 @@ public class DateWidgets1 extends Activity {
             new TimePickerDialog.OnTimeSetListener() {
 
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    //点击完成后，更新数据
                     mHour = hourOfDay;
                     mMinute = minute;
                     updateDisplay();
                 }
             };
 
+    //更新两位数
     private static String pad(int c) {
         if (c >= 10)
             return String.valueOf(c);

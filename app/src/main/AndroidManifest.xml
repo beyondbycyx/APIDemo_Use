@@ -32,6 +32,14 @@
             android:name=".ChronometerDemo"
             android:label="@string/title_activity_chronometer_demo" >
         </activity>
+        <activity
+            android:name=".DataPickerActivity"
+            android:label="@string/title_activity_data_picker" >
+        </activity>
+        <activity
+            android:name=".DataPickerActivity2"
+            android:label="@string/title_activity_data_picker2" >
+        </activity>
     </application>
 
 </manifest>
