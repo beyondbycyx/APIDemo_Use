@@ -12,7 +12,7 @@
 - **ViewFlipper：滑动view,实现view的淡入，淡出等效果**
 
 - **ExpandableListActivity : 可以下拉的listview** 
-    使用到了AsyncQueryHandler：异步查询handler，它持有contentresolver,并具有增删改方法，和完成操作后的执行结果的方法
+  </br>  使用到了AsyncQueryHandler：异步查询handler，它持有contentresolver,并具有增删改方法，和完成操作后的执行结果的方法
 
 - **额外：**
   * LinearLayout ：baselineAlignedChildIndex指的是其中的第几个子控件按照baseline对齐的。
