@@ -38,6 +38,12 @@ import com.example.android.apis.R;
  * Demonstrates expandable lists using a custom {@link ExpandableListAdapter}
  * from {@link BaseExpandableListAdapter}.
  */
+
+/*
+*  用到了系统提供的两大类:
+*  BaseExpandableListAdapter 适配器
+* ExpandableListActivity  自带的listactivity
+* */
 public class ExpandableList1 extends ExpandableListActivity {
 
     ExpandableListAdapter mAdapter;
@@ -47,24 +53,31 @@ public class ExpandableList1 extends ExpandableListActivity {
         super.onCreate(savedInstanceState);
 
         // Set up our adapter
+        //1.创建adapter
         mAdapter = new MyExpandableListAdapter();
+        //2.设置adapter
         setListAdapter(mAdapter);
+        //3.注册请求为该listview 显示上下文菜单
         registerForContextMenu(getExpandableListView());
     }
 
+    //长按后创建每个item（或子item）的上下文菜单
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Sample menu");
         menu.add(0, 0, 0, R.string.expandable_list_sample_action);
     }
-    
+
+    //item点击后的回调
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        //在item中获取额外的menuinfo
         ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
-
+        //获取该menu
         String title = ((TextView) info.targetView).getText().toString();
         
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+        //判断是组id还是子id被点击了
         if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
             int groupPos = ExpandableListView.getPackedPositionGroup(info.packedPosition); 
             int childPos = ExpandableListView.getPackedPositionChild(info.packedPosition); 
@@ -95,19 +108,20 @@ public class ExpandableList1 extends ExpandableListActivity {
                 { "Fluffy", "Snuggles" },
                 { "Goldy", "Bubbles" }
         };
-        
+        //获取某个组下的某个特定的item
         public Object getChild(int groupPosition, int childPosition) {
             return children[groupPosition][childPosition];
         }
-
+        //获取组下的某个item的值
         public long getChildId(int groupPosition, int childPosition) {
             return childPosition;
         }
-
+        //获取某个组的长度
         public int getChildrenCount(int groupPosition) {
             return children[groupPosition].length;
         }
 
+        //创建泛化的view,这里是指组下的item，还没开始绑定数据
         public TextView getGenericView() {
             // Layout parameters for the ExpandableListView
             AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
@@ -121,18 +135,18 @@ public class ExpandableList1 extends ExpandableListActivity {
             textView.setPadding(36, 0, 0, 0);
             return textView;
         }
-        
+        //绑定数据与子view
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                 View convertView, ViewGroup parent) {
             TextView textView = getGenericView();
             textView.setText(getChild(groupPosition, childPosition).toString());
             return textView;
         }
-
+        //获取组的数据
         public Object getGroup(int groupPosition) {
             return groups[groupPosition];
         }
-
+        //获取组的长度
         public int getGroupCount() {
             return groups.length;
         }
@@ -140,21 +154,23 @@ public class ExpandableList1 extends ExpandableListActivity {
         public long getGroupId(int groupPosition) {
             return groupPosition;
         }
-
+        //获取组的view并绑定数据
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
                 ViewGroup parent) {
             TextView textView = getGenericView();
             textView.setText(getGroup(groupPosition).toString());
+
             return textView;
         }
-
+        //子item可选择
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
+        //数据与id稳定的绑定
         public boolean hasStableIds() {
             return true;
         }
 
     }
+
 }

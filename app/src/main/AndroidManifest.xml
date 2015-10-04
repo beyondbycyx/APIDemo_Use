@@ -40,6 +40,10 @@
             android:name=".DataPickerActivity2"
             android:label="@string/title_activity_data_picker2" >
         </activity>
+        <activity
+            android:name=".ExpandableList1"
+            android:label="@string/title_activity_expandable_list1" >
+        </activity>
     </application>
 
 </manifest>

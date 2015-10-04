@@ -10,5 +10,6 @@
     <string name="chronometer_initial_format">Initial format: <xliff:g id="initial-format">%s</xliff:g></string>
     <string name="title_activity_data_picker">DataPickerActivity</string>
     <string name="title_activity_data_picker2">DataPickerActivity2</string>
+    <string name="title_activity_expandable_list1">ExpandableList1</string>
 
 </resources>

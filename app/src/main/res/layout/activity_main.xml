@@ -29,4 +29,10 @@
         android:onClick="datePicker2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/expand"
+        android:text="expand"
+        android:onClick="onexpand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

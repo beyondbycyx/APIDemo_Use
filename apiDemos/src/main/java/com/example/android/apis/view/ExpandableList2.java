@@ -31,32 +31,42 @@ import android.widget.SimpleCursorTreeAdapter;
 /**
  * Demonstrates expandable lists backed by Cursors
  */
+/*
+*  一个实现联系人列表，下拉显示联系人的手机号码的扩展listview
+*
+* */
 public class ExpandableList2 extends ExpandableListActivity {
 
+
+    //联系人表：id和display_ame
     private static final String[] CONTACTS_PROJECTION = new String[] {
         Contacts._ID,
         Contacts.DISPLAY_NAME
     };
-    private static final int GROUP_ID_COLUMN_INDEX = 0;
-
+    //手机号码表：id和号码
     private static final String[] PHONE_NUMBER_PROJECTION = new String[] {
             Phone._ID,
             Phone.NUMBER
     };
-
+    private static final int GROUP_ID_COLUMN_INDEX = 0;
     private static final int TOKEN_GROUP = 0;
     private static final int TOKEN_CHILD = 1;
-
+    //AsyncQueryHandler：一个继承handler,用于异步处理contentResolver的查询，其中的域包含了context的contentresolver
+    //1.startquery:用contentresolver来查询结果，得到cursor
+    //2.onquerycomplete：根据传入的cursor，处理结果
+    //  2.1.调用adapter的setxxxcursor的方法更新数据。
     private static final class QueryHandler extends AsyncQueryHandler {
+        //具有适配器
         private CursorTreeAdapter mAdapter;
 
         public QueryHandler(Context context, CursorTreeAdapter adapter) {
             super(context.getContentResolver());
             this.mAdapter = adapter;
         }
-
+        //处理查询后的结果，
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            //根据startquery时设置的token,进行setcursor操作
             switch (token) {
             case TOKEN_GROUP:
                 mAdapter.setGroupCursor(cursor);
@@ -69,7 +79,7 @@ public class ExpandableList2 extends ExpandableListActivity {
             }
         }
     }
-
+     //BaseExpandableListAdapter:系统的adapter
     public class MyExpandableListAdapter extends SimpleCursorTreeAdapter {
 
         // Note that the constructor does not take a Cursor. This is done to avoid querying the 
@@ -81,7 +91,7 @@ public class ExpandableList2 extends ExpandableListActivity {
             super(context, null, groupLayout, groupFrom, groupTo, childLayout, childrenFrom,
                     childrenTo);
         }
-
+        // 该方法提示，如果想异步查询provider,可以返回null，随后调用setChrild方法
         @Override
         protected Cursor getChildrenCursor(Cursor groupCursor) {
             // Given the group, we return a cursor for all the children within that group 
@@ -91,7 +101,8 @@ public class ExpandableList2 extends ExpandableListActivity {
             ContentUris.appendId(builder, groupCursor.getLong(GROUP_ID_COLUMN_INDEX));
             builder.appendEncodedPath(Contacts.Data.CONTENT_DIRECTORY);
             Uri phoneNumbersUri = builder.build();
-
+            //当setgroupcursor时，会第一次调用下面的方法，随后handler在oncomplete中处理查询的结果，再次调用该方法，实现真正的查询结果
+            //用异步查询handler开始查询
             mQueryHandler.startQuery(TOKEN_CHILD, groupCursor.getPosition(), phoneNumbersUri, 
                     PHONE_NUMBER_PROJECTION, Phone.MIMETYPE + "=?", 
                     new String[] { Phone.CONTENT_ITEM_TYPE }, null);
@@ -108,6 +119,7 @@ public class ExpandableList2 extends ExpandableListActivity {
         super.onCreate(savedInstanceState);
 
         // Set up our adapter
+        //创建适配器
         mAdapter = new MyExpandableListAdapter(
                 this,
                 android.R.layout.simple_expandable_list_item_1,
@@ -117,10 +129,12 @@ public class ExpandableList2 extends ExpandableListActivity {
                 new String[] { Phone.NUMBER }, // Number for child layouts
                 new int[] { android.R.id.text1 });
 
+        //设置适配器
         setListAdapter(mAdapter);
-
+        //创建handler,传入contentresolver,和适配器
         mQueryHandler = new QueryHandler(this, mAdapter);
 
+        //第一次查找，列名：手机号码=1，返回联系人的id和姓名
         // Query for people
         mQueryHandler.startQuery(TOKEN_GROUP, null, Contacts.CONTENT_URI, CONTACTS_PROJECTION, 
                 Contacts.HAS_PHONE_NUMBER + "=1", null, null);
@@ -132,6 +146,7 @@ public class ExpandableList2 extends ExpandableListActivity {
 
         // Null out the group cursor. This will cause the group cursor and all of the child cursors
         // to be closed.
+        //关闭cursor
         mAdapter.changeCursor(null);
         mAdapter = null;
     }
